@@ -1,0 +1,6 @@
+
+$> dep init
+
+$> go get -u github.com/dancannon/gorethink
+
+
