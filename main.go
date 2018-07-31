@@ -1,12 +1,15 @@
 package main
 
 import (
+	"log"
 	"net/http"
+
+	r "github.com/dancannon/gorethink"
 )
 
 type Message struct {
-	Name string      `json:"name"`
-	Data interface{} `json:"data"`
+	Name string      `json:"name" gorethink:"id,omitempty"`
+	Data interface{} `json:"data" gorethink:"name"`
 }
 
 type Channel struct {
@@ -14,9 +17,21 @@ type Channel struct {
 	Name string `json:"name"`
 }
 
-func main() {
+type User struct {
+	Id   string `gorethink:"id,omitempty"`
+	Name string `gorethink:"name"`
+}
 
-	router := NewRouter()
+func main() {
+	session, err := r.Connect(r.ConnectOpts{
+		Address:  "localhost:28015",
+		Database: "rtsupport",
+	})
+	if err != nil {
+		log.Panic(err.Error())
+	}
+
+	router := NewRouter(session)
 
 	router.Handle("channel add", addChannel)
 
