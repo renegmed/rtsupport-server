@@ -27,7 +27,7 @@ func (client *Client) Read() {
 }
 
 func (client *Client) Write() {
-	for msg := range client.send {
+	for msg := range client.send { // receives message from handlers.go
 		if err := client.socket.WriteJSON(msg); err != nil {
 			break
 		}
